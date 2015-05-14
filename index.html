@@ -150,7 +150,7 @@
                 for(i = 0; i < availableTextures.length; i++) {
                     tex = availableTextures[i];
                     var textname = 'text' + tex.substring(7);
-                    var addTo = ' url(' + './text/textname' + ')';
+                    var addTo = ' url(' + "'" + './text/' + textname + "'" + ')';
                     content = content.concat(addTo);
                 }
                 content = content.concat(';');
