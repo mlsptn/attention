@@ -101,6 +101,7 @@
             var rotate = false;
             var textures;
             var keys = [37, 38, 39, 40];
+            var preload = '';
 
             disable_scroll_keys();
             loadTextureList();
@@ -145,15 +146,14 @@
               document.onkeydown = keydown;
             }
 
-            function loadTextImgsCSS() {
-                content = '';
-                for(i = 0; i < availableTextures.length; i++) {
-                    tex = availableTextures[i];
-                    var textname = 'text' + tex.substring(7);
-                    var addTo = ' url(' + "'" + './text/' + textname + "'" + ')';
-                    content = content.concat(addTo);
-                }
-                document.getElementById("subtitle").style.content = content;
+            function loadTextImgCSS(i) {
+
+                tex = availableTextures[i];
+                var textname = 'text' + tex.substring(7);
+                var addTo = ' url(' + "'" + './text/' + textname + "'" + ')';
+                preload = preload.concat(addTo);
+
+                document.getElementById("subtitle").style.content = preload;
             }
 
             function loadTextureList() {
@@ -169,7 +169,9 @@
 
             function loadNextTextures(i) {
                 prevTexIndex = mod(i-1, availableTextures.length-1); 
+                loadTextImgCSS(prevTexIndex);
                 nextTexIndex = mod(i+1, availableTextures.length-1); 
+                loadTextImgCSS(nextTexIndex);
                 if(textures[prevTexIndex] == undefined) {
                     loadTexture(prevTexIndex);
                 }
@@ -185,7 +187,6 @@
                     textures = new Array(availableTextures.length)
                     loadTexture(0);
                     loadNextTextures(0);
-                    loadTextImgsCSS();
                 }
             }
 
