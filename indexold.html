@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>attention to what you were</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <style>
+            body {
+                font-family: Monospace;
+                background-color: #000;
+                color: #000;
+                margin: 0px;
+            }
+            a {
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+            #video {
+               padding-top: 56%;
+               z-index: -300;
+               width: 100%;
+               position: absolute;
+            }
+
+            #video iframe {
+               width: 100%;
+               height: 100%;
+               position: absolute;
+               top: 0;
+            }
+        
+            #subtitle {
+                background:url('text/text-1000gold1000gold1000.png') repeat center center;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                padding-top: 48%;
+                box-shadow: 10px 10px 5px #888888;
+                z-index: -200;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="subtitle"></div> 
+        <div id="video">
+           <!--<iframe id="player" type="text/html" width="560" height="315" src="https://www.youtube.com/embed/EUKfnkmPkiY?autoplay=1&controls=0&showinfo=0&rel=0&&wmode=Opaque&enablejsapi=1" frameborder="0" allowfullscreen> </iframe>--!>
+        </div>
+        <script src="./three.js"></script>
+        <script src="./KeyboardState.js"></script>
+        <script src="flag_files/Detector.js"></script>
+        <script src="flag_files/Stats.js"></script>
+        <script src="flag_files/Flag.js"></script>
+
+        <script>
+            //youtube player
+            /*var tag = document.createElement('script');
+
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            
+            var player;
+            function onYouTubeIframeAPIReady() {
+              player = new YT.Player('player', {
+              events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+                }
+              });
+            }
+
+            function onPlayerReady(event) {
+              //player.setVolume(0);
+              player.setPlaybackQuality("hd720"); 
+              player.setLoop(true);
+              event.target.playVideo();
+            }
+
+            function onPlayerStateChange(event) {
+              player.setLoop(true);
+            }*/
+            //
+
+            var reader = new XMLHttpRequest() || new ActiveXObject('MSXML2.XMLHTTP');
+
+            var pins = [];
+            for (var j=0;j<=cloth.h;j++)
+            pins.push(cloth.index(0, j));
+
+            for (var j=0;j<=cloth.h;j++)
+            pins.push(cloth.index(cloth.w, j));
+
+            if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+            var container, stats;
+            var camera, scene, renderer;
+
+            var clothGeometry;
+            var keyboard;
+            var object, arrow;
+            var frameCount = 0;
+            var count = 0;
+
+            var rotate = false;
+            var textures = [];
+
+            loadTextureList();
+            init();
+            animate();
+
+            function loadTextureList() {
+                reader.open('get', 'textures.txt', true); 
+                reader.onreadystatechange = loadContents;
+                reader.send(null);
+            }
+
+            function loadContents() {
+                if(reader.readyState==4) {
+                    availableTextures = reader.responseText.split('\n');
+                    console.log(availableTextures);
+                    for(i = 0; i < availableTextures.length; i++) {
+                        var filename = 'textures/' + availableTextures[i];
+                        textures[i] = THREE.ImageUtils.loadTexture(filename);
+                    }
+                }
+            }
+
+            function init() {
+
+                container = document.createElement( 'div' );
+                document.body.appendChild( container );
+
+                // scene
+                scene = new THREE.Scene();
+
+                scene.fog = new THREE.Fog( 0x000000, 500, 10000 );
+                scene.fog.color.setHSL( 0.0, 0.0, 0 );
+
+                // camera
+                camera = new THREE.PerspectiveCamera( 12, window.innerWidth / window.innerHeight, 1, 10000 );
+                camera.position.y = 50;
+                camera.position.z = 1500;
+                scene.add( camera );
+
+                // lights
+                var light, materials;
+
+                scene.add( new THREE.AmbientLight( 0x666666 ) );
+
+                light = new THREE.DirectionalLight( 0xffffff, 1.75 );
+                light.color.setHSL( 0.6, 0.125, 1 );
+                light.position.set( 50, 200, 100 );
+                light.position.multiplyScalar( 1.3 );
+
+                light.castShadow = true;
+
+                light.shadowMapWidth = 2048;
+                light.shadowMapHeight = 2048;
+
+                var d = 300;
+
+                light.shadowCameraLeft = -d;
+                light.shadowCameraRight = d;
+                light.shadowCameraTop = d;
+                light.shadowCameraBottom = -d;
+
+                light.shadowCameraFar = 1000;
+                light.shadowDarkness = 0.3;
+
+                scene.add( light );
+
+                light = new THREE.DirectionalLight( 0xffffff, 0.35 );
+                light.color.setHSL( 0.3, 0.95, 1 );
+                light.position.set( 0, -1, 0 );
+
+                //scene.add( light );
+
+                // cloth material
+                var clothTexture = THREE.ImageUtils.loadTexture( 'textures/compost-1000gold1000gold1000.png' );
+                clothTexture.wrapS = clothTexture.wrapT = THREE.RepeatWrapping;
+                clothTexture.anisotropy = 16;
+
+                materials = [
+                    new THREE.MeshPhongMaterial( { alphaTest: 0.5, ambient: 0x000000, color: 0xffffff, specular: 0x030303, emissive: 0x111111, shiness: 10, perPixel: true, metal: false, map: clothTexture, doubleSided: true } )
+                ];
+
+                // cloth geometry
+                clothGeometry = new THREE.ParametricGeometry( clothFunction, cloth.w, cloth.h, true );
+                clothGeometry.dynamic = true;
+                clothGeometry.computeFaceNormals();
+
+                var uniforms = { texture:  { type: "t", value: 0, texture: clothTexture } };
+
+                // cloth mesh
+                object = new THREE.Mesh( clothGeometry, materials[ 0 ] );
+                object.position.set( -150, -95, 0 );
+                object.castShadow = true;
+                object.receiveShadow = true;
+                scene.add( object );
+
+                renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+                renderer.setSize( window.innerWidth, window.innerHeight );
+                renderer.setClearColor( 0x000000, 0 );
+
+                keyboard = new KeyboardState();
+
+                container.appendChild( renderer.domElement );
+
+                renderer.gammaInput = true;
+                renderer.gammaOutput = true;
+                renderer.physicallyBasedShading = true;
+
+                renderer.shadowMapEnabled = true;
+
+                //
+                stats = new Stats();
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.top = '0px';
+                container.appendChild( stats.domElement );
+
+                stats.domElement.children[ 0 ].children[ 0 ].style.color = "#aaa";
+                stats.domElement.children[ 0 ].style.background = "transparent";
+                stats.domElement.children[ 0 ].children[ 1 ].style.display = "none";
+                //
+
+                window.addEventListener( 'resize', onWindowResize, false );
+
+            }
+
+            //
+
+            function onWindowResize() {
+
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+
+                renderer.setSize( window.innerWidth, window.innerHeight );
+
+            }
+
+            //
+
+            function animate() {
+                requestAnimationFrame( animate );
+
+                var time = Date.now();
+
+                windStrength = 30;
+                windForce.set( 1,1,1 ).normalize().multiplyScalar( windStrength );
+
+                simulate(time);
+                render();
+                stats.update();
+                frameCount += 1;
+            }
+
+            function changeTexture() {
+                wind = false;
+
+                var tex = availableTextures[count];
+                var clothTexture = textures[count];
+
+                clothTexture.wrapS = clothTexture.wrapT = THREE.RepeatWrapping;
+                clothTexture.anisotropy = 16;
+                object.material.map = clothTexture;
+                object.material.map.needsUpdate = true;
+                var textname = 'text' + tex.substring(7);
+                document.title = textname.substring(5,textname.length-4)
+                document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
+            }
+
+            function mod(n, m) {
+                    return ((n % m) + m) % m;
+            }
+
+            function render() {
+                var timer = Date.now() * 0.0002;
+                var p = cloth.particles;
+
+                for ( var i = 0, il = p.length; i < il; i ++ ) {
+                    clothGeometry.vertices[ i ].copy( p[ i ].position );
+                }
+
+                clothGeometry.computeFaceNormals();
+                clothGeometry.computeVertexNormals();
+
+                clothGeometry.normalsNeedUpdate = true;
+                clothGeometry.verticesNeedUpdate = true;
+
+        
+                if (frameCount % 80 == 0) {
+                    if(textures.length > 0) changeTexture();
+                    wind = true;
+                } 
+
+                keyboard.update();
+                if (keyboard.down("left")) {
+                    count = mod((count - 1), (availableTextures.length-1));
+                    console.log(count);
+                    changeTexture();
+                }
+    
+                else if (keyboard.down("right")) {
+                    count = mod((count + 1), (availableTextures.length-1));
+                    changeTexture();
+                }
+
+                camera.lookAt( scene.position );
+                renderer.render( scene, camera );
+            }
+
+        </script><div><canvas height="932" width="1920"></canvas><div style="cursor: pointer; width: 80px; opacity: 0.9; z-index: 10001; position: absolute; top: 0px;"><div style="background: none repeat scroll 0% 0% transparent; padding: 2px 0px 3px;"><div style="font-family: Helvetica,Arial,sans-serif; text-align: left; font-size: 9px; color: rgb(170, 170, 170); margin: 0px 0px 1px 3px;"><span style="font-weight:bold">60 FPS</span> (30-69)</div><canvas style="display: none; margin-left: 3px;" height="30" width="74"></canvas></div><div style="background-color: rgb(8, 24, 8); padding: 2px 0px 3px; display: none;"><div style="font-family: Helvetica,Arial,sans-serif; text-align: left; font-size: 9px; color: rgb(0, 255, 0); margin: 0px 0px 1px 3px;"><span style="font-weight:bold">10 MS</span> (5-504)</div><canvas style="display: block; margin-left: 3px;" height="30" width="74"></canvas></div><div style="background-color: rgb(24, 8, 13); padding: 2px 0px 3px; display: none;"><div style="font-family: Helvetica,Arial,sans-serif; text-align: left; font-size: 9px; color: rgb(255, 0, 128); margin: 0px 0px 1px 3px;"><span style="font-weight:bold">MEM</span></div><canvas style="display: block; margin-left: 3px;" height="30" width="74"></canvas></div></div></div>
+    
+</body></html>
+
+
