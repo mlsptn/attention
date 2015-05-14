@@ -99,7 +99,7 @@
             var count = 0;
 
             var rotate = false;
-            var textures = [];
+            var textures;
             var keys = [37, 38, 39, 40];
 
             disable_scroll_keys();
@@ -151,14 +151,29 @@
                 reader.send(null);
             }
 
+            function loadTexture(i) {
+                var filename = 'textures/' + availableTextures[i];
+                textures[i] = THREE.ImageUtils.loadTexture(filename);
+            }
+
+            function loadNextTextures(i) {
+                prevTexIndex = mod(i-1, availableTextures.length-1); 
+                nextTexIndex = mod(i+1, availableTextures.length-1); 
+                if(textures[prevTexIndex] == undefined) {
+                    loadTexture(prevTexIndex);
+                }
+                if(textures[nextTexIndex] == undefined) {
+                    loadTexture(nextTexIndex);
+                }
+            }
+
             function loadContents() {
                 if(reader.readyState==4) {
                     availableTextures = reader.responseText.split('\n');
                     console.log(availableTextures);
-                    for(i = 0; i < availableTextures.length; i++) {
-                        var filename = 'textures/' + availableTextures[i];
-                        textures[i] = THREE.ImageUtils.loadTexture(filename);
-                    }
+                    textures = new Array(availableTextures.length)
+                    loadTexture(0);
+                    loadNextTextures(0);
                 }
             }
 
@@ -299,12 +314,14 @@
             }
 
             function changeLeft() {
-                count = mod((count - 1), (availableTextures.length-1));
+                count = mod((count - 1), (textures.length-1));
+                loadNextTextures(count);
                 changeTexture();
             }
 
             function changeRight() {
-                count = mod((count + 1), (availableTextures.length-1));
+                count = mod((count + 1), (textures.length-1));
+                loadNextTextures(count);
                 changeTexture();
             }
 
