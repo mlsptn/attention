@@ -15,13 +15,13 @@
                 text-decoration: underline;
                 cursor: pointer;
             }
-
             #subtitle {
                 background:url('text/text-1000_gold_1000_gold_1000_.png') repeat center center;
                 width: 100%;
                 height: 100%;
                 position: absolute;
                 z-index: -200;
+                content: none;
             }
 
             #back {
@@ -145,6 +145,18 @@
               document.onkeydown = keydown;
             }
 
+            function loadTextImgsCSS() {
+                content = '';
+                for(i = 0; i < availableTextures.length; i++) {
+                    tex = availableTextures[i];
+                    var textname = 'text' + tex.substring(7);
+                    var addTo = ' url(' + './text/textname' + ')';
+                    content = content.concat(addTo);
+                }
+                content = content.concat(';');
+                document.getElementById("subtitle").style.content = content;
+            }
+
             function loadTextureList() {
                 reader.open('get', 'textures.txt', true); 
                 reader.onreadystatechange = loadContents;
@@ -174,6 +186,7 @@
                     textures = new Array(availableTextures.length)
                     loadTexture(0);
                     loadNextTextures(0);
+                    loadTextImgsCSS();
                 }
             }
 
