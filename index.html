@@ -68,7 +68,8 @@
         <div id="back"></div> 
         <div id="keys">
             <div id="landr">
-                <img id="l" src="./left.png"/><img id="r" src="./right.png"/>
+                <img id="l" src="./left.png"/> 
+                <img id="r" src="./right.png"/>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
@@ -103,20 +104,20 @@
             var keys = [37, 38, 39, 40];
             var preload = '';
 
+            $( "#l" ).click(function(){
+            var k1 = $( "#l" ).index(this);
+                changeLeft();
+            });
+
+            $( "#r" ).click(function(){
+            var k1 = $( "#r" ).index(this);
+                changeRight();
+            });
+
             disable_scroll_keys();
             loadTextureList();
             init();
             animate();
-
-            $("#l").click(function(){
-            var k1 = $("#l").index(this);
-                changeLeft();
-            });
-
-            $("#r").click(function(){
-            var k1 = $("#r").index(this);
-                changeRight();
-            });
 
             function preventDefault(e) {
               e = e || window.event;
