@@ -169,9 +169,9 @@
             }
 
             function loadNextTextures(i) {
-                prevTexIndex = mod(i-1, availableTextures.length-1); 
+                prevTexIndex = mod(i-1, availableTextures.length); 
                 loadTextImgCSS(prevTexIndex);
-                nextTexIndex = mod(i+1, availableTextures.length-1); 
+                nextTexIndex = mod(i+1, availableTextures.length); 
                 loadTextImgCSS(nextTexIndex);
                 if(textures[prevTexIndex] == undefined) {
                     loadTexture(prevTexIndex);
@@ -184,6 +184,7 @@
             function loadContents() {
                 if(reader.readyState==4) {
                     availableTextures = reader.responseText.split('\n');
+                    availableTextures.pop();
                     console.log(availableTextures);
                     textures = new Array(availableTextures.length)
                     loadTexture(0);
@@ -319,7 +320,7 @@
                 object.material.map = clothTexture;
                 object.material.map.needsUpdate = true;
                 var textname = 'text' + tex.substring(7);
-                document.title = textname.substring(5,textname.length-4).replace(/_/g," ")
+                document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
                 document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
             }
 
@@ -328,13 +329,13 @@
             }
 
             function changeLeft() {
-                count = mod((count - 1), (textures.length-1));
+                count = mod((count - 1), (textures.length));
                 loadNextTextures(count);
                 changeTexture();
             }
 
             function changeRight() {
-                count = mod((count + 1), (textures.length-1));
+                count = mod((count + 1), (textures.length));
                 loadNextTextures(count);
                 changeTexture();
             }
