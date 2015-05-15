@@ -370,24 +370,26 @@
             }
 
             function changeTexture() {
-                wind = false;
-                consoleOffset = 0;
+                if(textures[count] != undefined) {
+                    wind = false;
+                    consoleOffset = 0;
 
-                var tex = availableTextures[count];
-                var clothTexture = textures[count];
+                    var tex = availableTextures[count];
+                    var clothTexture = textures[count];
 
-                clothTexture.wrapS = clothTexture.wrapT = THREE.RepeatWrapping;
-                clothTexture.anisotropy = 16;
-                object.material.map = clothTexture;
-                object.material.map.needsUpdate = true;
-                var textname = 'text' + tex.substring(7);
-    
-                //fixthis
-                var urlListName = './urlLists/' + tex.substr(8,tex.length-12) + '.txt';
-                loadUrlList(urlListName);
+                    clothTexture.wrapS = clothTexture.wrapT = THREE.RepeatWrapping;
+                    clothTexture.anisotropy = 16;
+                    object.material.map = clothTexture;
+                    object.material.map.needsUpdate = true;
+                    var textname = 'text' + tex.substring(7);
+        
+                    //fixthis
+                    var urlListName = './urlLists/' + tex.substr(8,tex.length-12) + '.txt';
+                    loadUrlList(urlListName);
 
-                document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
-                document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
+                    document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
+                    document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
+                }
             }
 
             function mod(n, m) {
@@ -395,19 +397,15 @@
             }
 
             function changeLeft() {
-                if(availableTextures.length > 0) {
-                    count = mod((count - 1), (textures.length));
-                    loadNextTextures(count);
-                    changeTexture();
-                }
+                count = mod((count - 1), (textures.length));
+                loadNextTextures(count);
+                changeTexture();
             }
 
             function changeRight() {
-                if(availableTextures.length > 0) {
-                    count = mod((count + 1), (textures.length));
-                    loadNextTextures(count);
-                    changeTexture();
-                }
+                count = mod((count + 1), (textures.length));
+                loadNextTextures(count);
+                changeTexture();
             }
 
             function render() {
