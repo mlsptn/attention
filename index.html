@@ -93,10 +93,9 @@
 
             #banner-info {
                 width: 100%;
-                height: 1.6%;
-                padding-top:0%;
+                height: 13px;
                 font-family: sans-serif;
-                font-size: 8pt;
+                font-size: 8pt; 
                 text-align: center;
                 z-index: -100;
                 color: #666666;
@@ -142,9 +141,17 @@
 
             if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-            var message = "Your IM conversation with mileshiroo will be saved in mileshiroo's history in Gmail from now on.<br><br>\
- The Google Keyboard uses data from Google apps and services to improve suggestions and corrections.<br><br>\
-Use ← and → arrow keys to browse.";
+            var instructions = 'Use ← and → arrow keys to browse.';
+            var message1Delay = 200;
+            var message2Delay = 800;
+            var message1 = "Your IM conversation with mileshiroo will be saved in mileshiroo's history in Gmail from now on.";
+            var message2 = "The Google Keyboard uses data from Google apps and services to improve suggestions and corrections."; 
+
+            var showedInstructions = false;
+            var showedMessage1 = false;
+            var openedMessage1 = false;
+            var showedMessage2 = false;
+            var openedMessage2 = false;
 
             var started = false;
             var container;
@@ -272,7 +279,10 @@ Use ← and → arrow keys to browse.";
             }
 
             function init() {
-                vex.dialog.alert(message);
+                vex.dialog.alert({
+                message:instructions,
+                callback: function (e) { showedInstructions = true;}
+                });
                 container = document.createElement( 'div' );
                 document.body.appendChild( container );
 
@@ -429,6 +439,21 @@ Use ← and → arrow keys to browse.";
             }
 
             function render() {
+                if(showedInstructions && !showedMessage1 && !openedMessage1 && (frameCount % message1Delay == 0)) {
+                    vex.dialog.alert({
+                        message:message1,
+                        callback: function (e) {showedMessage1=true;}
+                    });
+                    openedMessage1=true;
+                }
+                if(showedInstructions && showedMessage1 && !showedMessage2 && !openedMessage2 && (frameCount % message2Delay == 0)) {
+                    vex.dialog.alert({
+                        message:message2,
+                        callback: function (e) {showedMessage2=true;}
+                    });
+                    openedMessage2=true;
+                }
+    
                 if(!started) {
                     if(changeTexture()) started = true;
                 }
