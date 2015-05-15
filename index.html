@@ -38,6 +38,7 @@
                 position: absolute;
                 z-index: 300;
             }
+
             #landr {
                 width: 100%;
                 height: 100%;
@@ -45,6 +46,7 @@
                 position: absolute;
                 z-index: 300;
             }
+
             #l {
                 width: 4%;
                 height: auto;
@@ -53,12 +55,31 @@
                 right: auto;    
                 vertical-align: middle;
             }
+
             #r {
                 width: 4%;
                 height: auto;
                 position: absolute;
                 left: auto;
                 right: 3px;    
+                vertical-align: middle;
+            }
+            
+            #console-container {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: -100;
+                text-align: center;
+            }
+
+            #console {
+                top:30%;
+                width: 100%;
+                height: 40%;
+                font-size: 16px; font-size: 1.0vw;
+                -webkit-mask-box-image: -webkit-linear-gradient(transparent, black, transparent);
+                position: absolute;
                 vertical-align: middle;
             }
         </style>
@@ -71,6 +92,12 @@
                 <img id="l" src="./left.png"/> 
                 <img id="r" src="./right.png"/>
             </div>
+        </div>
+
+        <div id="console-container">
+            <div id="console"></div>
+        </div>
+            
         </div>
         <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
         <script src="./three.js"></script>
@@ -98,11 +125,14 @@
             var object, arrow;
             var frameCount = 0;
             var count = 0;
+            var consoleOffset = 0;
+            var CONSOLE_LINES = 20;
 
             var rotate = false;
             var textures;
             var keys = [37, 38, 39, 40];
             var preload = '';
+            var urlsForTexture = [];
 
             $( "#l" ).click(function(){
             var k1 = $( "#l" ).index(this);
@@ -147,8 +177,31 @@
               document.onkeydown = keydown;
             }
 
-            function loadTextImgCSS(i) {
+            function showConsole(offset) {
+                var inner = '';
+                var gofor = offset+CONSOLE_LINES;
+                for(i = offset; i < gofor; i++) {
+                    var iWrap = mod(i, urlsForTexture.length);
+                    inner = inner.concat(urlsForTexture[iWrap] + '<br>');
+                }
+                document.getElementById("console").innerHTML = inner;
+            }
 
+            function loadUrllistContents() {
+                if(reader.readyState==4) {
+                    urlsForTexture = reader.responseText.split('\n');
+                    urlsForTexture.pop();
+                    showConsole(0);
+                }
+            }
+
+            function loadUrlList(filename) {
+                reader.open('get', filename, true); 
+                reader.onreadystatechange = loadUrllistContents;
+                reader.send(null);
+            }
+
+            function loadTextImgCSS(i) {
                 tex = availableTextures[i];
                 var textname = 'text' + tex.substring(7);
                 var addTo = ' url(' + "'" + './text/' + textname + "'" + ')';
@@ -185,7 +238,6 @@
                 if(reader.readyState==4) {
                     availableTextures = reader.responseText.split('\n');
                     availableTextures.pop();
-                    console.log(availableTextures);
                     textures = new Array(availableTextures.length)
                     loadTexture(0);
                     loadNextTextures(0);
@@ -311,6 +363,7 @@
 
             function changeTexture() {
                 wind = false;
+                consoleOffset = 0;
 
                 var tex = availableTextures[count];
                 var clothTexture = textures[count];
@@ -320,12 +373,17 @@
                 object.material.map = clothTexture;
                 object.material.map.needsUpdate = true;
                 var textname = 'text' + tex.substring(7);
+    
+                //fixthis
+                var urlListName = './urlLists/' + tex.substr(8,tex.length-12) + '.txt';
+                loadUrlList(urlListName);
+
                 document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
                 document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
             }
 
             function mod(n, m) {
-                    return ((n % m) + m) % m;
+                return ((n % m) + m) % m;
             }
 
             function changeLeft() {
@@ -354,7 +412,9 @@
                 clothGeometry.normalsNeedUpdate = true;
                 clothGeometry.verticesNeedUpdate = true;
 
-        
+                consoleOffset = mod(consoleOffset+1, urlsForTexture.length);
+                showConsole(consoleOffset);
+
                 if (frameCount % 80 == 0) {
                     if(textures.length > 0) changeTexture();
                     wind = true;
