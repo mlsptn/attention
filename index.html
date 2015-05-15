@@ -279,10 +279,6 @@
             }
 
             function init() {
-                vex.dialog.alert({
-                message:instructions,
-                callback: function (e) { showedInstructions = true;}
-                });
                 container = document.createElement( 'div' );
                 document.body.appendChild( container );
 
@@ -455,7 +451,13 @@
                 }
     
                 if(!started) {
-                    if(changeTexture()) started = true;
+                    if(changeTexture()) {
+                        started = true;
+                        vex.dialog.alert({
+                        message:instructions,
+                        callback: function (e) { showedInstructions = true;}
+                        });
+                    }
                 }
                 var timer = Date.now() * 0.0002;
                 var p = cloth.particles;
