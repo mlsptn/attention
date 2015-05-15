@@ -201,6 +201,7 @@
                 jQuery.get(filename, function(data) {
                    urlsForTexture = data.split('\n');
                    urlsForTexture.pop();
+                   showConsole(0);
                 });
             }
 
@@ -417,10 +418,9 @@
                 clothGeometry.normalsNeedUpdate = true;
                 clothGeometry.verticesNeedUpdate = true;
 
-                consoleOffset = mod(consoleOffset+1, urlsForTexture.length);
-
                 if(frameCount % Math.floor(Math.random()*100) == 0) {
-                    showConsole(consoleOffset);
+                   consoleOffset = mod(consoleOffset+1, urlsForTexture.length);
+                   showConsole(consoleOffset);
                 }
 
                 if (frameCount % 80 == 0) {
