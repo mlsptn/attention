@@ -299,7 +299,7 @@ function simulate(time) {
             face = faces[i];
             normal = face.normal;
 
-            tmpForce.copy(normal).normalize().multiplyScalar(normal.dot(windForce));
+            tmpForce.copy(normal).normalize().multiplyScalar(normal.dot(windForce)).multiplyScalar(.3);
             particles[face.a].addForce(tmpForce);
             particles[face.b].addForce(tmpForce);
             particles[face.c].addForce(tmpForce);
