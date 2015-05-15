@@ -395,15 +395,19 @@
             }
 
             function changeLeft() {
-                count = mod((count - 1), (textures.length));
-                loadNextTextures(count);
-                changeTexture();
+                if(availableTextures.length > 0) {
+                    count = mod((count - 1), (textures.length));
+                    loadNextTextures(count);
+                    changeTexture();
+                }
             }
 
             function changeRight() {
-                count = mod((count + 1), (textures.length));
-                loadNextTextures(count);
-                changeTexture();
+                if(availableTextures.length > 0) {
+                    count = mod((count + 1), (textures.length));
+                    loadNextTextures(count);
+                    changeTexture();
+                }
             }
 
             function render() {
