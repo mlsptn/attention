@@ -16,7 +16,7 @@
                 cursor: pointer;
             }
             #subtitle {
-                background:url('text/text-misssss_bun_Charlie_.png') repeat center center;
+                background:url('text/text-happy_now_.png') repeat center center;
                 width: 100%;
                 height: 100%;
                 position: absolute;
@@ -109,10 +109,13 @@
         </div>
         <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
         <script src="./three.js"></script>
+        <script src="vex.combined.min.js"></script>
+        <script>vex.defaultOptions.className = 'vex-theme-wireframe';</script>
+        <link rel="stylesheet" href="vex.css" />
+        <link rel="stylesheet" href="vex-theme-wireframe.css" />
         <script src="./KeyboardState.js"></script>
         <script src="flag_files/Detector.js"></script>
         <script src="flag_files/Flag.js"></script>
-
         <script>
             var reader = new XMLHttpRequest() || new ActiveXObject('MSXML2.XMLHTTP');
 
@@ -124,6 +127,10 @@
             pins.push(cloth.index(cloth.w, j));
 
             if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+            var message = "Your IM conversation with mileshiroo will be saved in mileshiroo's history in Gmail from now on.<br><br>\
+ Learn from Google apps and services and your typed data to improve suggestions.<br><br>\ old conversations<br>new improved suggestions<br>phrases<br>image search queries<br>sets of images, one per phrase<br>banners, one per image set<br><br>\
+use ← and → keys to browse the banners";
 
             var started = false;
             var container;
@@ -223,7 +230,7 @@
             }
 
             function loadTexture(i) {
-                var filename = 'optimized/' + availableTextures[i];
+                var filename = './optimized/' + availableTextures[i];
                 textures[i] = THREE.ImageUtils.loadTexture(filename);
             }
 
@@ -251,6 +258,7 @@
             }
 
             function init() {
+                vex.dialog.alert(message);
                 container = document.createElement( 'div' );
                 document.body.appendChild( container );
 
@@ -300,7 +308,7 @@
                 //scene.add( light );
 
                 // cloth material
-                var clothTexture = THREE.ImageUtils.loadTexture( 'optimized/compost-misssss_bun_Charlie_.png' );
+                var clothTexture = THREE.ImageUtils.loadTexture( './optimized/compost-happy_now_.png' );
                 clothTexture.wrapS = clothTexture.wrapT = THREE.RepeatWrapping;
                 clothTexture.anisotropy = 16;
 
