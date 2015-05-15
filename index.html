@@ -153,6 +153,7 @@
             });
 
             loadUrlList('./urlLists/misssss_bun_Charlie_.txt');
+            showConsole(0);
             disable_scroll_keys();
             loadTextureList();
             init();
@@ -196,18 +197,11 @@
                 document.getElementById("console").innerHTML = inner;
             }
 
-            function loadUrllistContents() {
-                if(reader.readyState==4) {
-                    urlsForTexture = reader.responseText.split('\n');
-                    urlsForTexture.pop();
-                    showConsole(0);
-                }
-            }
-
             function loadUrlList(filename) {
-                reader.open('get', filename, true); 
-                reader.onreadystatechange = loadUrllistContents;
-                reader.send(null);
+                jQuery.get(filename, function(data) {
+                   urlsForTexture = data.split('\n');
+                   urlsForTexture.pop();
+                });
             }
 
             function loadTextImgCSS(i) {
