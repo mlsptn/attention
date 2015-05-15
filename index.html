@@ -226,7 +226,7 @@
             }
 
             function loadTexture(i) {
-                var filename = 'textures/' + availableTextures[i];
+                var filename = 'optimized/' + availableTextures[i];
                 textures[i] = THREE.ImageUtils.loadTexture(filename);
             }
 
@@ -303,7 +303,7 @@
                 //scene.add( light );
 
                 // cloth material
-                var clothTexture = THREE.ImageUtils.loadTexture( 'textures/compost-misssss_bun_Charlie_.png' );
+                var clothTexture = THREE.ImageUtils.loadTexture( 'optimized/compost-misssss_bun_Charlie_.png' );
                 clothTexture.wrapS = clothTexture.wrapT = THREE.RepeatWrapping;
                 clothTexture.anisotropy = 16;
 
