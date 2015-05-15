@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <title>attention to what you were</title>
+        <title></title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
         <style>
@@ -390,7 +390,7 @@ use ← and → keys to browse the banners";
                     var urlListName = './urlLists/' + tex.substr(8,tex.length-12) + '.txt';
                     loadUrlList(urlListName);
 
-                    document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
+                    window.document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
                     document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
                     return true;
                 }
