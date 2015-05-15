@@ -137,7 +137,7 @@
             var CONSOLE_LINES = 9;
 
             var rotate = false;
-            var textures;
+            var textures = [];
             var keys = [37, 38, 39, 40];
             var preload = '';
             var urlsForTexture = [];
@@ -216,7 +216,7 @@
                 var addTo = ' url(' + "'" + './text/' + textname + "'" + ')';
                 preload = preload.concat(addTo);
 
-                document.getElementById("subtitle").style.content = preload;
+                //document.getElementById("subtitle").style.content = preload;
             }
 
             function loadTextureList() {
