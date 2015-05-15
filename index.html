@@ -90,6 +90,19 @@
                 position: absolute;
                 vertical-align: middle;
             }
+
+            #banner-info {
+                width: 100%;
+                height: 1.6%;
+                padding-top:0%;
+                font-family: sans-serif;
+                font-size: 8pt;
+                text-align: center;
+                z-index: -100;
+                color: #666666;
+                background: #ffffff;
+                position:absolute;
+            } 
         </style>
     </head>
     <body>
@@ -107,6 +120,7 @@
         </div>
             
         </div>
+        <div id="banner-info"></div> 
         <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
         <script src="./three.js"></script>
         <script src="vex.combined.min.js"></script>
@@ -129,8 +143,8 @@
             if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
             var message = "Your IM conversation with mileshiroo will be saved in mileshiroo's history in Gmail from now on.<br><br>\
- Learn from Google apps and services and your typed data to improve suggestions.<br><br>\ old conversations<br>new improved suggestions<br>phrases<br>image search queries<br>sets of images, one per phrase<br>banners, one per image set<br><br>\
-use ← and → keys to browse the banners";
+ The Google Keyboard uses data from Google apps and services to improve suggestions and corrections.<br><br>\
+Use ← and → arrow keys to browse.";
 
             var started = false;
             var container;
@@ -390,7 +404,8 @@ use ← and → keys to browse the banners";
                     var urlListName = './urlLists/' + tex.substr(8,tex.length-12) + '.txt';
                     loadUrlList(urlListName);
 
-                    window.document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
+                    var info = textname.substring(5,textname.length-4).replace(/_/g," ") + ' ' + (count+1) + '/' + textures.length;
+                    document.getElementById("banner-info").innerHTML = info;  
                     document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
                     return true;
                 }
