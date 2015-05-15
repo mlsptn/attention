@@ -216,7 +216,7 @@
                 var addTo = ' url(' + "'" + './text/' + textname + "'" + ')';
                 preload = preload.concat(addTo);
 
-                //document.getElementById("subtitle").style.content = preload;
+                document.getElementById("subtitle").style.content = preload;
             }
 
             function loadTextureList() {
@@ -388,7 +388,7 @@
                     loadUrlList(urlListName);
 
                     document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
-                    document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
+                    //document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
                 }
             }
 
