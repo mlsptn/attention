@@ -85,7 +85,6 @@ compost-human_you_happy_now_im_human_you_happy_.png
 compost-sure_you_want_to_proceed_.png
 compost-tomorrow_much_food_.png
 compost-hp_touchsmart_hp_touchsmart_hp_touchsmart_hp_touchsmart_.png
-compost-novelty_access.png
 compost-antidepressant_antidepressants_anxious_.png
 compost-agree_hehehehe.png
 compost-pretend_to_be_unhappy_.png
