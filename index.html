@@ -125,6 +125,7 @@
 
             if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
+            var started = false;
             var container;
             var camera, scene, renderer;
 
@@ -152,8 +153,6 @@
                 changeRight();
             });
 
-            loadUrlList('./urlLists/misssss_bun_Charlie_.txt');
-            showConsole(0);
             disable_scroll_keys();
             loadTextureList();
             init();
@@ -190,11 +189,14 @@
             function showConsole(offset) {
                 var inner = '';
                 var gofor = offset+CONSOLE_LINES;
+
                 for(i = offset; i < gofor; i++) {
                     var iWrap = mod(i, urlsForTexture.length);
                     inner = inner.concat(urlsForTexture[iWrap] + '<br>');
                 }
-                document.getElementById("console").innerHTML = inner;
+                //if(inner != '') {
+                    document.getElementById("console").innerHTML = inner;
+                //}
             }
 
             function loadUrlList(filename) {
@@ -335,7 +337,7 @@
                 renderer.shadowMapEnabled = true;
 
                 window.addEventListener( 'resize', onWindowResize, false );
-
+                wind = false;
             }
 
             //
@@ -366,7 +368,6 @@
 
             function changeTexture() {
                 if(textures[count] != undefined) {
-                    wind = false;
                     consoleOffset = 0;
 
                     var tex = availableTextures[count];
@@ -384,7 +385,9 @@
 
                     document.title = textname.substring(5,textname.length-4).replace(/_/g," ") + ' (' + (count+1) + '/' + textures.length + ')';
                     document.getElementById("subtitle").style.background = "url" + "(./text/" + textname + ") repeat center center";
+                    return true;
                 }
+                return false;
             }
 
             function mod(n, m) {
@@ -404,6 +407,9 @@
             }
 
             function render() {
+                if(!started) {
+                    if(changeTexture()) started = true;
+                }
                 var timer = Date.now() * 0.0002;
                 var p = cloth.particles;
 
@@ -422,11 +428,6 @@
                    consoleOffset = mod(consoleOffset+1, urlsForTexture.length);
                    showConsole(consoleOffset);
                 }
-
-                if (frameCount % 80 == 0) {
-                    if(textures.length > 0) changeTexture();
-                    wind = true;
-                } 
 
                 keyboard.update();
                 if (keyboard.down("left")) {
